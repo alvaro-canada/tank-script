@@ -1,0 +1,30 @@
+name: Run main.py every 35 minutes
+ 
+on:
+  schedule:
+    - cron: "*/35 * * * *"
+  workflow_dispatch:
+ 
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+ 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+ 
+      - name: Install dependencies
+        run: |
+          pip install rbrapi
+ 
+      - name: Run main.py with arguments
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: |
+          python main.py --email "$EMAIL" --password "$PASSWORD"

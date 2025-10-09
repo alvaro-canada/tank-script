@@ -31,30 +31,29 @@ def main():
     else:
         logger = Logger(__name__)
 
-    while True:
-        try:
-            client = RocketBotRoyale(email, password)
+    try:
+        client = RocketBotRoyale(email, password)
 
-            client.collect_timed_bonus()
-            logger.info("Coins collected successfully.")
+        client.collect_timed_bonus()
+        logger.info("Coins collected successfully.")
 
-            coins = client.account().wallet["coins"]
-            logger.info(f"Your coins now: {coins}.")
+        coins = client.account().wallet["coins"]
+        logger.info(f"Your coins now: {coins}.")
 
-            if args.auto_open_crates and coins >= 1000:
-                award = client.buy_crate()
-                logger.info(f"Crate award is: {award.award_id}")
+        if args.auto_open_crates and coins >= 1000:
+            award = client.buy_crate()
+            logger.info(f"Crate award is: {award.award_id}")
 
-        except AuthenticationError as e:
-            logger.error(f"Unable to authenticate: {e}")
-        except CollectTimedBonusError as e:
-            logger.info(f"Bonus not available to claim yet: {e}")
-        except LootBoxError as e:
-            logger.error(f"Unable to open crates: {e}")
-        except Exception as e:
-            logger.exception(f"An unexpected error occurred: {e}")
-        finally:
-            sleep(60 * 5)
+    except AuthenticationError as e:
+        logger.error(f"Unable to authenticate: {e}")
+    except CollectTimedBonusError as e:
+        logger.info(f"Bonus not available to claim yet: {e}")
+    except LootBoxError as e:
+        logger.error(f"Unable to open crates: {e}")
+    except Exception as e:
+        logger.exception(f"An unexpected error occurred: {e}")
+    finally:
+        logger.info(f"Done!")
 
 
 if __name__ == "__main__":
